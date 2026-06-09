@@ -7,7 +7,7 @@
 - JWT access token + refresh token — авторизация.
 - BCrypt — безопасное хранение паролей.
 - FluentValidation — валидация входящих данных.
-- DTO + AutoMapper — отделяем API-модели от сущностей базы.
+- DTO — отделяем API-модели от сущностей базы.
 - Repository + Service — слои приложения.
 - Pagination, Filtering, Sorting, Search — нормальный список товаров.
 - Swagger с кнопкой Authorize.
