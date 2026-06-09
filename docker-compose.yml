@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: myshop-postgres
+    environment:
+      POSTGRES_DB: MyShopDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./MyShop.Api
+      dockerfile: Dockerfile
+    container_name: myshop-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=MyShopDb;Username=postgres;Password=12345
+      Jwt__Issuer: MyShop.Api
+      Jwt__Audience: MyShop.Client
+      Jwt__SecretKey: CHANGE_ME_TO_A_LONG_RANDOM_SECRET_KEY_AT_LEAST_32_CHARS
+      Jwt__AccessTokenMinutes: 15
+      Jwt__RefreshTokenDays: 7
+      AllowedOrigins__0: http://localhost:3000
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: ./myshop.client
+      dockerfile: Dockerfile
+    container_name: myshop-client
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
